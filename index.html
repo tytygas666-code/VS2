@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0c">
+
+  <meta
+    name="description"
+    content="VS2 — детейлинг и тюнинг-ателье в Волгограде. Работаем с 2018 года. Рославльская улица, 3."
+  >
+
+  <title>VS2 — детейлинг и тюнинг-ателье в Волгограде</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      --bg: #0b0b0c;
+      --surface: #171719;
+      --text: #f4f4f2;
+      --muted: #a6a6a8;
+      --line: rgba(255, 255, 255, 0.13);
+      --container: 1240px;
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(
+          circle at 80% 15%,
+          rgba(140, 140, 145, 0.09),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 10% 70%,
+          rgba(110, 110, 115, 0.07),
+          transparent 30%
+        );
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button,
+    a,
+    input {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 4px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    img[hidden],
+    [hidden] {
+      display: none !important;
+    }
+
+    section {
+      scroll-margin-top: 110px;
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .glass {
+      border: 1px solid var(--line);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.10),
+        rgba(255, 255, 255, 0.025)
+      );
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 20px 60px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    /* ШАПКА */
+
+    .header {
+      position: fixed;
+      z-index: 100;
+      top: 16px;
+      right: 0;
+      left: 0;
+    }
+
+    .nav {
+      min-height: 72px;
+      padding: 10px 14px 10px 20px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background-color: rgba(25, 25, 27, 0.82);
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      min-width: 58px;
+      font-size: 27px;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -2px;
+    }
+
+    .logo img {
+      width: auto;
+      max-width: 105px;
+      max-height: 44px;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      color: #c5c5c7;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .nav-links a,
+    .footer-links a {
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .footer-links a:hover {
+      color: #fff;
+    }
+
+    .nav-phone {
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      min-height: 54px;
+      padding: 0 24px;
+      border: 1px solid transparent;
+      border-radius: 15px;
+      background: #efefed;
+      color: #111;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      background: #fff;
+    }
+
+    .button-dark {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .button-dark:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .button-small {
+      min-height: 46px;
+      padding: 0 17px;
+      font-size: 11px;
+    }
+
+    /* ПЕРВЫЙ ЭКРАН */
+
+    .hero {
+      position: relative;
+      min-height: 760px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      background: #202022;
+    }
+
+    .hero-image {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.85),
+          rgba(0, 0, 0, 0.25) 75%
+        ),
+        linear-gradient(
+          0deg,
+          #0b0b0c,
+          transparent 55%
+        ),
+        url("images/hero.jpg") center / cover no-repeat;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding-top: 180px;
+      padding-bottom: 80px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #bdbdc0;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: #c7c7c7;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.05;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 24px 0;
+      font-size: clamp(48px, 8.6vw, 112px);
+      font-weight: 900;
+      letter-spacing: -0.065em;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      color: #a8a8aa;
+    }
+
+    .hero-copy {
+      max-width: 560px;
+      color: #c0c0c2;
+      font-size: 17px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      max-width: 690px;
+      margin-top: 56px;
+      border-top: 1px solid var(--line);
+    }
+
+    .stat {
+      min-width: 0;
+      padding: 20px 20px 0 0;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 27px;
+      letter-spacing: -0.05em;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* ОБЩИЕ СЕКЦИИ */
+
+    .section {
+      padding: 110px 0;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 30px;
+      margin-bottom: 45px;
+    }
+
+    h2 {
+      margin: 15px 0 0;
+      font-size: clamp(38px, 5.5vw, 72px);
+      letter-spacing: -0.055em;
+      text-transform: uppercase;
+    }
+
+    .section-description {
+      max-width: 370px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* УСЛУГИ */
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .service {
+      min-width: 0;
+      min-height: 210px;
+      padding: 26px;
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .service-number {
+      color: #858589;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+    }
+
+    .service h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      letter-spacing: -0.04em;
+    }
+
+    .service p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* ФОТОГРАФИИ */
+
+    .photo {
+      position: relative;
+      display: block;
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+      overflow: hidden;
+      isolation: isolate;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(135deg, #343438, #19191b);
+      color: inherit;
+      cursor: zoom-in;
+      appearance: none;
+    }
+
+    .photo::before {
+      content: "VS2";
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: rgba(255, 255, 255, 0.13);
+      font-size: clamp(28px, 4vw, 55px);
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -0.08em;
+      pointer-events: none;
+    }
+
+    .photo img {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      object-fit: cover;
+      object-position: center;
+      transition:
+        transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+        filter 0.35s ease;
+    }
+
+    .photo:hover img,
+    .photo:focus-visible img {
+      transform: scale(1.08);
+      filter: brightness(1.08);
+    }
+
+    .photo::after {
+      content: "↗";
+      position: absolute;
+      z-index: 2;
+      right: 14px;
+      bottom: 14px;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      background: rgba(20, 20, 20, 0.55);
+      color: #fff;
+      font-size: 18px;
+      opacity: 0;
+      transform: translateY(5px);
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .photo:hover::after,
+    .photo:focus-visible::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ОТЗЫВЫ */
+
+    .reviews-section {
+      padding-top: 20px;
+    }
+
+    .reviews {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .review {
+      min-width: 0;
+      min-height: 300px;
+      display: grid;
+      grid-template-columns: minmax(0, 43%) minmax(0, 1fr);
+      align-items: center;
+      gap: 22px;
+      padding: 24px;
+      border-radius: 26px;
+      overflow: hidden;
+    }
+
+    .review-photo-wrap {
+      min-width: 0;
+      padding: 8px;
+    }
+
+    .review-photo {
+      height: 245px;
+      border-radius: 15px;
+      transform: rotate(-3deg);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .review:nth-child(even) .review-photo {
+      transform: rotate(3deg);
+    }
+
+    .review-content {
+      min-width: 0;
+    }
+
+    .stars {
+      color: #ddd;
+      letter-spacing: 0.16em;
+      font-size: 14px;
+    }
+
+    .review blockquote {
+      margin: 16px 0;
+      color: #d0d0d1;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .review-author {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* ГАЛЕРЕЯ */
+
+    .gallery-section {
+      background: #101011;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-auto-rows: 270px;
+      gap: 14px;
+    }
+
+    .gallery .photo {
+      height: 100%;
+      border-radius: 20px;
+    }
+
+    .gallery .photo:first-child {
+      grid-column: span 2;
+    }
+
+    /* КАЛЬКУЛЯТОР */
+
+    .calculator {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: 60px;
+      align-items: start;
+      padding: 48px;
+      border-radius: 30px;
+    }
+
+    .calculator h2 {
+      margin-bottom: 24px;
+    }
+
+    .calculator-copy {
+      max-width: 400px;
+      color: var(--muted);
+    }
+
+    .service-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      min-height: 58px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.035);
+      cursor: pointer;
+      font-size: 13px;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .option:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .option input {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      accent-color: #eee;
+    }
+
+    .option span {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .option b {
+      color: #aaa;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin: 24px 0;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .total span {
+      color: #b8b8ba;
+      font-size: 14px;
+    }
+
+    .total strong {
+      font-size: 30px;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .field {
+      width: 100%;
+      min-width: 0;
+      min-height: 56px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      outline: none;
+      background: rgba(0, 0, 0, 0.22);
+      color: #fff;
+    }
+
+    .field:focus {
+      border-color: #aaa;
+    }
+
+    .field::placeholder {
+      color: #888;
+    }
+
+    .submit {
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .form-message {
+      min-height: 24px;
+      margin: 12px 0 0;
+      color: #dedede;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .form-message a {
+      color: #fff;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* КОНТАКТЫ */
+
+    .contacts {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 30px;
+      padding: 65px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .contacts h2 {
+      margin-bottom: 25px;
+    }
+
+    .contact-info {
+      color: #bcbcbf;
+    }
+
+    .contact-info a {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: #fff;
+      font-size: clamp(23px, 3vw, 34px);
+      font-weight: 800;
+    }
+
+    .contact-info p {
+      margin-bottom: 0;
+    }
+
+    footer {
+      padding: 25px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: #858589;
+      font-size: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    /* ПРОСМОТР ФОТОГРАФИЙ */
+
+    .lightbox {
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 70px 80px;
+      background: rgba(0, 0, 0, 0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .lightbox-image {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+    }
+
+    .lightbox-button {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .lightbox-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .lightbox-close {
+      top: 20px;
+      right: 20px;
+    }
+
+    .lightbox-prev {
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .lightbox-next {
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .lightbox-counter {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #c5c5c5;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    /* ПЛАНШЕТЫ */
+
+    @media (max-width: 950px) {
+      .nav-links {
+        gap: 14px;
+      }
+
+      .nav-phone {
+        display: none;
+      }
+
+      .services-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .reviews {
+        grid-template-columns: 1fr;
+      }
+
+      .review {
+        min-height: 270px;
+      }
+
+      .calculator {
+        gap: 30px;
+        padding: 32px;
+      }
+
+      .gallery {
+        grid-auto-rows: 220px;
+      }
+    }
+
+    /* ТЕЛЕФОНЫ */
+
+    @media (max-width: 650px) {
+      .container {
+        width: calc(100% - 28px);
+      }
+
+      .header {
+        top: 8px;
+      }
+
+      .nav {
+        min-height: 62px;
+        border-radius: 18px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        min-height: 720px;
+      }
+
+      .hero-content {
+        padding-top: 150px;
+        padding-bottom: 55px;
+      }
+
+      .hero-copy {
+        font-size: 15px;
+      }
+
+      .stats {
+        gap: 8px;
+      }
+
+      .stat strong {
+        font-size: 22px;
+      }
+
+      .stat span {
+        font-size: 10px;
+      }
+
+      .section {
+        padding: 75px 0;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-description {
+        margin-top: 20px;
+      }
+
+      .services-grid {
+        gap: 10px;
+      }
+
+      .service {
+        min-height: 180px;
+        padding: 19px;
+      }
+
+      .service h3 {
+        font-size: 19px;
+      }
+
+      .reviews-section {
+        padding-top: 0;
+      }
+
+      .review {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 22px;
+      }
+
+      .review-photo-wrap {
+        padding: 6px;
+      }
+
+      .review-photo {
+        height: 230px;
+        transform: rotate(-2deg);
+      }
+
+      .review:nth-child(even) .review-photo {
+        transform: rotate(2deg);
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: 170px;
+        gap: 10px;
+      }
+
+      .gallery .photo {
+        border-radius: 15px;
+      }
+
+      .gallery .photo:first-child {
+        grid-column: span 2;
+        height: 230px;
+      }
+
+      .gallery {
+        grid-template-rows: 230px;
+      }
+
+      .calculator {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 24px;
+      }
+
+      .service-options,
+      .fields {
+        grid-template-columns: 1fr;
+      }
+
+      .contacts {
+        display: block;
+      }
+
+      .contacts .button {
+        margin-top: 25px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+
+      .lightbox {
+        padding: 75px 15px 90px;
+      }
+
+      .lightbox-button {
+        width: 45px;
+        height: 45px;
+      }
+
+      .lightbox-prev {
+        top: auto;
+        bottom: 20px;
+        left: calc(50% - 75px);
+        transform: none;
+      }
+
+      .lightbox-next {
+        top: auto;
+        right: calc(50% - 75px);
+        bottom: 20px;
+        transform: none;
+      }
+
+      .lightbox-counter {
+        bottom: 31px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+  /* Исправление галереи: все 6 фото одинакового размера */
+.gallery .photo:first-child {
+  grid-column: auto;
+  height: 100%;
+}
+
+@media (max-width: 650px) {
+  .gallery {
+    grid-template-rows: none;
+    grid-auto-rows: 170px;
+  }
+
+  .gallery .photo:first-child {
+    grid-column: auto;
+    height: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+  <!-- ЗАКРЕПЛЁННАЯ ШАПКА -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav glass" aria-label="Основная навигация">
+
+        <a class="logo" href="#top" aria-label="VS2 — на главную">
+          <!-- Логотип: images/logo.png -->
+          <img
+            src="images/logo.png"
+            alt="VS2"
+            onerror="this.hidden=true; this.nextElementSibling.hidden=false"
+          >
+          <span hidden>VS2</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="#services">Услуги</a>
+          <a href="#reviews">Отзывы</a>
+          <a href="#works">Работы</a>
+          <a href="#calculator">Калькулятор</a>
+          <a href="#contacts">Контакты</a>
+        </div>
+
+        <a class="nav-phone" href="tel:+79376963000">
+          +7 (937) 696-30-00
+        </a>
+
+        <a class="button button-small" href="#calculator">
+          Рассчитать ↗
+        </a>
+
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ПЕРВЫЙ ЭКРАН: images/hero.jpg -->
+    <section class="hero">
+      <div class="hero-image" aria-hidden="true"></div>
+
+      <div class="container hero-content">
+        <div class="eyebrow">
+          Детейлинг и тюнинг-ателье · Волгоград
+        </div>
+
+        <h1>
+          Характер<br>
+          в <span>деталях.</span>
+        </h1>
+
+        <p class="hero-copy">
+          Уход, защита и дооснащение автомобиля. Для тех, кто ценит
+          безупречный внешний вид и внимание к каждой детали.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button" href="#calculator">
+            Рассчитать стоимость ↗
+          </a>
+
+          <a class="button button-dark" href="#works">
+            Смотреть работы
+          </a>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <strong>2018</strong>
+            <span>Работаем с 2018 года</span>
+          </div>
+
+          <div class="stat">
+            <strong>Сотни</strong>
+            <span>Довольных клиентов</span>
+          </div>
+
+          <div class="stat">
+            <strong>VS2</strong>
+            <span>Внимание к деталям</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- УСЛУГИ -->
+    <section class="section" id="services">
+      <div class="container">
+
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Что мы делаем</div>
+            <h2>Ваш автомобиль.<br>Наше мастерство.</h2>
+          </div>
+
+          <p class="section-description">
+            От бережного ухода за салоном до защиты кузова
+            и дооснащения автомобиля.
+          </p>
+        </div>
+
+        <div class="services-grid">
+
+          <article class="service glass">
+            <span class="service-number">01 / УХОД</span>
+            <div>
+              <h3>Химчистка салона</h3>
+              <p>Чистота и внимание к каждой поверхности.</p>
+            </div>
+          </article>
+
+          <article class="service glass">
+            <span class="service-number">02 / БЛЕСК</span>
+            <div>
+              <h3>Полировка кузова</h3>
+              <p>Обновляем внешний вид лакокрасочного покрытия.</p>
+            </div>
+          </article>
+
+          <article class="service glass">
+            <span class="service-number">03 / ЗАЩИТА</span>
+            <div>
+              <h3>Оклейка плёнкой</h3>
+              <p>Защита элементов и сохранение внешнего вида.</p>
+            </div>
+          </article>
+
+          <article class="service glass">
+            <span class="service-number">04 / ТЮНИНГ</span>
+            <div>
+              <h3>Доработка авто</h3>
+              <p>Дооснащение и решения под ваш автомобиль.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ОТЗЫВЫ И ФОТОГРАФИИ -->
+    <section class="section reviews-section" id="reviews">
+      <div class="container">
+
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Работы и отзывы</div>
+            <h2>Говорят<br>наши клиенты.</h2>
+          </div>
+
+          <p class="section-description">
+            С 2018 года нам доверяют автомобили.
+            Вот что клиенты говорят о работе VS2.
+          </p>
+        </div>
+
+        <div class="reviews">
+
+          <article class="review glass">
+            <div class="review-photo-wrap">
+              <button
+                class="photo review-photo"
+                type="button"
+                aria-label="Открыть фотографию работы VS2: химчистка салона"
+              >
+                <img
+                  src="images/review-1.jpg"
+                  alt="Работа VS2 — химчистка салона"
+                  loading="lazy"
+                  onerror="this.hidden=true"
+                >
+              </button>
+            </div>
+
+            <div class="review-content">
+              <div class="stars" aria-hidden="true">★★★★★</div>
+              <blockquote>
+                «Приезжал на хим чистку салона, сделали все качественно
+                и быстро, всем доволен, всем рекомендую»
+              </blockquote>
+              <div class="review-author">Александр Ч.</div>
+            </div>
+          </article>
+
+          <article class="review glass">
+            <div class="review-photo-wrap">
+              <button
+                class="photo review-photo"
+                type="button"
+                aria-label="Открыть фотографию работы VS2: полировка и защита кузова"
+              >
+                <img
+                  src="images/review-2.jpg"
+                  alt="Работа VS2 — полировка и защита кузова"
+                  loading="lazy"
+                  onerror="this.hidden=true"
+                >
+              </button>
+            </div>
+
+            <div class="review-content">
+              <div class="stars" aria-hidden="true">★★★★★</div>
+              <blockquote>
+                «Отличное место! Отдавал свое авто на заделку сколов,
+                полировку, и бронирование — сделали быстро, не пренебрегая
+                качеством выполнения работ! Все по высшему разряду, даже
+                бонусом оклеили пороги)»
+              </blockquote>
+              <div class="review-author">Александр М.</div>
+            </div>
+          </article>
+
+          <article class="review glass">
+            <div class="review-photo-wrap">
+              <button
+                class="photo review-photo"
+                type="button"
+                aria-label="Открыть фотографию работы VS2: уход за автомобилем"
+              >
+                <img
+                  src="images/review-3.jpg"
+                  alt="Работа VS2 — уход за автомобилем"
+                  loading="lazy"
+                  onerror="this.hidden=true"
+                >
+              </button>
+            </div>
+
+            <div class="review-content">
+              <div class="stars" aria-hidden="true">★★★★★</div>
+              <blockquote>
+                «Отличная студия детейлинга! Качественная мойка, химчистка,
+                полировка. Ребята оказывают широкий спектр услуг по доработке
+                и дооснащению авто. Умеренная цена на услуги.»
+              </blockquote>
+              <div class="review-author">Дмитрий А.</div>
+            </div>
+          </article>
+
+          <article class="review glass">
+            <div class="review-photo-wrap">
+              <button
+                class="photo review-photo"
+                type="button"
+                aria-label="Открыть фотографию работы VS2: дооснащение автомобиля"
+              >
+                <img
+                  src="images/review-4.jpg"
+                  alt="Работа VS2 — дооснащение автомобиля"
+                  loading="lazy"
+                  onerror="this.hidden=true"
+                >
+              </button>
+            </div>
+
+            <div class="review-content">
+              <div class="stars" aria-hidden="true">★★★★★</div>
+              <blockquote>
+                «Хорошие ребята. Много что делают по машине. Ставил у них
+                ксенон. Быстро сделали, все чётко. Советую 100%, молодцы.
+                Хозяину этого сервиса Вячеславу отдельное спасибо.»
+              </blockquote>
+              <div class="review-author">Денис И.</div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ГАЛЕРЕЯ РАБОТ -->
+    <section class="section gallery-section" id="works">
+      <div class="container">
+
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Портфолио VS2</div>
+            <h2>Работа<br>в деталях.</h2>
+          </div>
+
+          <p class="section-description">
+            Фотографии наших работ — лучший способ познакомиться
+            с подходом VS2.
+          </p>
+        </div>
+
+        <div class="gallery">
+
+          <button class="photo" type="button" aria-label="Открыть фотографию работы 1">
+            <img
+              src="images/work-1.jpg"
+              alt="Работа VS2 — фотография 1"
+              loading="lazy"
+              onerror="this.hidden=true"
+            >
+          </button>
+
+          <button class="photo" type="button" aria-label="Открыть фотографию работы 2">
+            <img
+              src="images/work-2.jpg"
+              alt="Работа VS2 — фотография 2"
+              loading="lazy"
+              onerror="this.hidden=true"
+            >
+          </button>
+
+          <button class="photo" type="button" aria-label="Открыть фотографию работы 3">
+            <img
+              src="images/work-3.jpg"
+              alt="Работа VS2 — фотография 3"
+              loading="lazy"
+              onerror="this.hidden=true"
+            >
+          </button>
+
+          <button class="photo" type="button" aria-label="Открыть фотографию работы 4">
+            <img
+              src="images/work-4.jpg"
+              alt="Работа VS2 — фотография 4"
+              loading="lazy"
+              onerror="this.hidden=true"
+            >
+          </button>
+
+          <button class="photo" type="button" aria-label="Открыть фотографию работы 5">
+            <img
+              src="images/work-5.jpg"
+              alt="Работа VS2 — фотография 5"
+              loading="lazy"
+              onerror="this.hidden=true"
+            >
+          </button>
+
+          <button class="photo" type="button" aria-label="Открыть фотографию работы 6">
+            <img
+              src="images/work-6.jpg"
+              alt="Работа VS2 — фотография 6"
+              loading="lazy"
+              onerror="this.hidden=true"
+            >
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- КАЛЬКУЛЯТОР -->
+    <section class="section" id="calculator">
+      <div class="container">
+        <div class="calculator glass">
+
+          <div>
+            <div class="eyebrow">Калькулятор стоимости</div>
+
+            <h2>Начнём<br>с деталей.</h2>
+
+            <p class="calculator-copy">
+              Выберите интересующие услуги, чтобы узнать
+              предварительную стоимость.
+            </p>
+          </div>
+
+          <form id="request-form">
+
+            <div class="service-options">
+
+              <label class="option">
+                <input type="checkbox" name="service" value="Химчистка салона">
+                <span>Химчистка салона</span>
+                <b>100 ₽</b>
+              </label>
+
+              <label class="option">
+                <input type="checkbox" name="service" value="Полировка кузова">
+                <span>Полировка кузова</span>
+                <b>100 ₽</b>
+              </label>
+
+              <label class="option">
+                <input type="checkbox" name="service" value="Оклейка плёнкой">
+                <span>Оклейка плёнкой</span>
+                <b>100 ₽</b>
+              </label>
+
+              <label class="option">
+                <input type="checkbox" name="service" value="Детейлинг-мойка">
+                <span>Детейлинг-мойка</span>
+                <b>100 ₽</b>
+              </label>
+
+              <label class="option">
+                <input type="checkbox" name="service" value="Заделка сколов">
+                <span>Заделка сколов</span>
+                <b>100 ₽</b>
+              </label>
+
+              <label class="option">
+                <input type="checkbox" name="service" value="Доработка и дооснащение">
+                <span>Доработка и дооснащение</span>
+                <b>100 ₽</b>
+              </label>
+
+            </div>
+
+            <div class="total">
+              <span>Предварительная стоимость</span>
+              <strong id="total">0 ₽</strong>
+            </div>
+
+            <div class="fields">
+              <input
+                class="field"
+                type="text"
+                name="name"
+                placeholder="Ваше имя"
+                aria-label="Ваше имя"
+                autocomplete="name"
+                required
+              >
+
+              <input
+                class="field"
+                type="tel"
+                name="phone"
+                placeholder="Номер телефона"
+                aria-label="Номер телефона"
+                autocomplete="tel"
+                required
+              >
+            </div>
+
+            <button class="button submit" type="submit">
+              Связаться с VS2 ↗
+            </button>
+
+            <p
+              class="form-message"
+              id="form-message"
+              role="status"
+              aria-live="polite"
+            ></p>
+
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- КОНТАКТЫ -->
+    <section id="contacts">
+      <div class="container">
+        <div class="contacts">
+
+          <div>
+            <div class="eyebrow">Контакты</div>
+            <h2>Ждём вас<br>в VS2.</h2>
+
+            <div class="contact-info">
+              <a href="tel:+79376963000">
+                +7 (937) 696-30-00
+              </a>
+
+              <p>Волгоград, Рославльская ул., 3</p>
+            </div>
+          </div>
+
+          <a
+            class="button button-dark"
+            href="https://yandex.ru/maps/?text=Волгоград%2C%20Рославльская%20улица%2C%203"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Открыть на карте ↗
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ПОДВАЛ -->
+  <footer>
+    <div class="container footer-inner">
+
+      <span>
+        © <span id="year"></span> VS2 — детейлинг и тюнинг-ателье.
+        Работаем с 2018 года.
+      </span>
+
+      <div class="footer-links">
+        <a href="#top">Наверх ↑</a>
+        <a href="tel:+79376963000">Позвонить</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ОКНО ПРОСМОТРА ФОТОГРАФИЙ -->
+  <div
+    class="lightbox"
+    id="lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Просмотр фотографий работ"
+    hidden
+  >
+    <button
+      class="lightbox-button lightbox-close"
+      type="button"
+      aria-label="Закрыть просмотр"
+    >
+      ×
+    </button>
+
+    <button
+      class="lightbox-button lightbox-prev"
+      type="button"
+      aria-label="Предыдущая фотография"
+    >
+      ‹
+    </button>
+
+    <img class="lightbox-image" id="lightbox-image" src="" alt="">
+
+    <button
+      class="lightbox-button lightbox-next"
+      type="button"
+      aria-label="Следующая фотография"
+    >
+      ›
+    </button>
+
+    <div class="lightbox-counter" id="lightbox-counter"></div>
+  </div>
+
+  <script>
+    /* КАЛЬКУЛЯТОР */
+
+    const form = document.getElementById("request-form");
+    const checkboxes = form.querySelectorAll('input[name="service"]');
+    const total = document.getElementById("total");
+    const message = document.getElementById("form-message");
+
+    function updateTotal() {
+      const count = form.querySelectorAll(
+        'input[name="service"]:checked'
+      ).length;
+
+      total.textContent = (count * 100).toLocaleString("ru-RU") + " ₽";
+      message.textContent = "";
+    }
+
+    checkboxes.forEach(function (checkbox) {
+      checkbox.addEventListener("change", updateTotal);
+    });
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const selected = form.querySelectorAll(
+        'input[name="service"]:checked'
+      );
+
+      if (selected.length === 0) {
+        message.textContent = "Выберите хотя бы одну услугу.";
+        return;
+      }
+
+      const phone = form.elements.phone.value;
+
+      if (phone.replace(/\D/g, "").length < 10) {
+        message.textContent = "Проверьте номер телефона.";
+        form.elements.phone.focus();
+        return;
+      }
+
+      message.replaceChildren();
+
+      const text = document.createTextNode(
+        "Чтобы обсудить выбранные услуги, позвоните нам: "
+      );
+
+      const link = document.createElement("a");
+      link.href = "tel:+79376963000";
+      link.textContent = "+7 (937) 696-30-00";
+
+      message.append(text, link);
+    });
+
+    /* ПРОСМОТР ФОТОГРАФИЙ */
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxCounter = document.getElementById("lightbox-counter");
+    const closeButton = lightbox.querySelector(".lightbox-close");
+    const prevButton = lightbox.querySelector(".lightbox-prev");
+    const nextButton = lightbox.querySelector(".lightbox-next");
+    const photoButtons = Array.from(document.querySelectorAll(".photo"));
+
+    let currentPhotos = [];
+    let currentIndex = 0;
+    let lastFocusedElement = null;
+
+    function availablePhotos() {
+      return photoButtons.filter(function (button) {
+        const image = button.querySelector("img");
+
+        return image &&
+          !image.hidden &&
+          image.complete &&
+          image.naturalWidth > 0;
+      });
+    }
+
+    function showPhoto(index) {
+      if (!currentPhotos.length) return;
+
+      currentIndex =
+        (index + currentPhotos.length) % currentPhotos.length;
+
+      const image = currentPhotos[currentIndex].querySelector("img");
+
+      lightboxImage.src = image.currentSrc || image.src;
+      lightboxImage.alt = image.alt;
+      lightboxCounter.textContent =
+        (currentIndex + 1) + " / " + currentPhotos.length;
+
+      const singlePhoto = currentPhotos.length < 2;
+      prevButton.hidden = singlePhoto;
+      nextButton.hidden = singlePhoto;
+    }
+
+    function openLightbox(button) {
+      currentPhotos = availablePhotos();
+
+      const index = currentPhotos.indexOf(button);
+
+      if (index === -1) return;
+
+      lastFocusedElement = button;
+      showPhoto(index);
+
+      lightbox.hidden = false;
+      document.body.classList.add("modal-open");
+      closeButton.focus();
+    }
+
+    function closeLightbox() {
+      lightbox.hidden = true;
+      document.body.classList.remove("modal-open");
+      lightboxImage.removeAttribute("src");
+      lightboxImage.alt = "";
+
+      if (lastFocusedElement) {
+        lastFocusedElement.focus();
+      }
+    }
+
+    photoButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        openLightbox(button);
+      });
+    });
+
+    closeButton.addEventListener("click", closeLightbox);
+
+    prevButton.addEventListener("click", function () {
+      showPhoto(currentIndex - 1);
+    });
+
+    nextButton.addEventListener("click", function () {
+      showPhoto(currentIndex + 1);
+    });
+
+    lightbox.addEventListener("click", function (event) {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (lightbox.hidden) return;
+
+      if (event.key === "Escape") {
+        closeLightbox();
+      }
+
+      if (event.key === "ArrowLeft") {
+        showPhoto(currentIndex - 1);
+      }
+
+      if (event.key === "ArrowRight") {
+        showPhoto(currentIndex + 1);
+      }
+
+      /* Оставляем фокус внутри открытого окна просмотра */
+      if (event.key === "Tab") {
+        const controls = [closeButton, prevButton, nextButton].filter(
+          function (button) {
+            return !button.hidden;
+          }
+        );
+
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    /* ГОД В ПОДВАЛЕ */
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>
